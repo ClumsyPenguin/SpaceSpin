@@ -1,20 +1,24 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Nez;
+using SpaceSpin.Scenes;
 
 namespace SpaceSpin;
 
-public class Game1 : Core
+public class Game1: Nez.Core
 {
-    public Game1() : base("Space spin", 1280, 720, false)
+    public Game1() : base()
     {
 
     }
-
+    
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
 
         base.Initialize();
+        
+        Scene = new HexScene();
     }
 
     protected override void LoadContent()
@@ -37,8 +41,6 @@ public class Game1 : Core
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
-
-        // TODO: Add your drawing code here
 
         base.Draw(gameTime);
     }
