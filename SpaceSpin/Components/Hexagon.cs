@@ -1,21 +1,27 @@
 using System;
 using Microsoft.Xna.Framework;
 using Nez;
+using Nez.BitmapFonts;
 
 namespace SpaceSpin.Components;
 
 public class Hexagon : RenderableComponent, IUpdatable
 {
+    private readonly BitmapFont _font;
+
     private readonly Vector2[] _points;
     private readonly float _radius;
     private float _rotation;
 
+    private HealthComponent _health;
+    
     private readonly Color _color = Color.White;
 
-    public Hexagon(float radius)
+    public Hexagon(float radius, BitmapFont font)
     {
         _radius = radius;
         _points = new Vector2[6];
+        _font = font;
 
         for (var i = 0; i < 6; i++)
         {
@@ -25,6 +31,12 @@ public class Hexagon : RenderableComponent, IUpdatable
                 (float)Math.Sin(angle) * _radius
             );
         }
+    }
+    
+    public override void OnAddedToEntity()
+    {
+        base.OnAddedToEntity();
+        _health = Entity.GetComponent<HealthComponent>() ?? Entity.AddComponent(new HealthComponent(500));
     }
 
     public override RectangleF Bounds =>
@@ -41,8 +53,13 @@ public class Hexagon : RenderableComponent, IUpdatable
         var dir = mousePos - center;
         if (dir.LengthSquared() > 0.0001f)
             _rotation = (float)Math.Atan2(dir.Y, dir.X);
+        
+        if (Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+        {
+            _health.TakeDamage(25);
+        }
 
-        if (Input.LeftMouseButtonPressed && dir.LengthSquared() > 0.0001f)
+        if (!_health.IsDead && Input.LeftMouseButtonPressed && dir.LengthSquared() > 0.0001f)
         {
             var dirNorm = Vector2.Normalize(dir);
 
@@ -89,5 +106,14 @@ public class Hexagon : RenderableComponent, IUpdatable
 
             batcher.DrawLine(a, b, _color);
         }
+
+        if (_font is null || _health is null) 
+            return;
+        
+        var text = _health.CurrentHealth.ToString();
+        var size = _font.MeasureString(text);
+        var textPos = center - size / 2f;
+            
+        batcher.DrawString(_font, text, textPos, Color.White);
     }
 }

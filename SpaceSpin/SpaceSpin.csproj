@@ -29,4 +29,10 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Nez\Nez.Portable\Nez.MG38.csproj" />
     </ItemGroup>
+    <ItemGroup>
+        <Content Include="..\..\Nez\Nez.Portable\Content\NezDefaultBMFont.xnb">
+            <Link>Content\nez\NezDefaultBMFont.xnb</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 </Project>
