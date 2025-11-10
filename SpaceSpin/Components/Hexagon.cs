@@ -37,6 +37,11 @@ public class Hexagon : RenderableComponent, IUpdatable
     {
         base.OnAddedToEntity();
         _health = Entity.GetComponent<HealthComponent>() ?? Entity.AddComponent(new HealthComponent(500));
+        
+        _health.OnDeath += _ =>
+        {
+            Entity.Destroy();
+        };    
     }
 
     public override RectangleF Bounds =>
@@ -76,7 +81,7 @@ public class Hexagon : RenderableComponent, IUpdatable
         var projEntity = Entity.Scene.CreateEntity("projectile");
         projEntity.Position = spawnPos;
         
-        projEntity.AddComponent(new Projectile(direction * speed, 20f));
+        projEntity.AddComponent(new Projectile(direction * speed, 20f, 2f, 25, Entity));
     }
 
     public override void Render(Batcher batcher, Camera camera)
