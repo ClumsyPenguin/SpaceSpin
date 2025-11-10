@@ -60,6 +60,9 @@ namespace SpaceSpin.Scenes
         {
             base.Update();
 
+            if (Core.Instance.SceneTransition != null)
+                return;
+            
             if (_currentWave is 0)
             {
                 _currentWave++;

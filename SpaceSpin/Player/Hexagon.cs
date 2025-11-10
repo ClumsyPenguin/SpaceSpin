@@ -61,11 +61,6 @@ public class Hexagon : RenderableComponent, IUpdatable
         if (dir.LengthSquared() > 0.0001f)
             _rotation = (float)Math.Atan2(dir.Y, dir.X);
         
-        if (Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
-        {
-            _health.TakeDamage(25);
-        }
-
         if (!_health.IsDead && Input.LeftMouseButtonPressed && dir.LengthSquared() > 0.0001f)
         {
             var dirNorm = Vector2.Normalize(dir);

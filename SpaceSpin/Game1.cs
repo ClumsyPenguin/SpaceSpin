@@ -16,7 +16,7 @@ public class Game1: Core
     {
         base.Initialize();
         
-        Scene = new GameScene();
+        Scene = new WelcomeScene();
     }
 
     protected override void LoadContent()
