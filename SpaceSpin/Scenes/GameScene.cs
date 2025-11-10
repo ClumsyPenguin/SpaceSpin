@@ -8,6 +8,7 @@ using SpaceSpin.Player;
 using SpaceSpin.Shared;
 using SpaceSpin.Shared.Components;
 using SpaceSpin.Shared.Game;
+using SpaceSpin.Shared.UI;
 
 namespace SpaceSpin.Scenes
 {
@@ -15,16 +16,21 @@ namespace SpaceSpin.Scenes
     {
         public UnweightedGraph<Point> Graph;
         public float CellSize = 40f;
-        public int CurrentWave = 0;
+        public int CurrentWave = 1;
 
         private const float IntermissionTime = 5f;
         private float _waveCountdownTimer;
         private bool _isIntermission;
 
-        private Dictionary<int, Wave> _waves = new();
+        private readonly Dictionary<int, Wave> _waves = new();
 
         private int _cols;
         private int _rows;
+
+        public GameScene()
+        {
+            ClearColor = Color.Black;
+        }
         
         public override void Initialize()
         {
@@ -33,13 +39,17 @@ namespace SpaceSpin.Scenes
             ClearColor = Color.CornflowerBlue;
 
             // --- Wave Definitions ---
-            _waves[0] = new Wave { SpawnPositions = [new Vector2(100, 100), new Vector2(800, 600)] };
-            _waves[1] = new Wave { SpawnPositions = [new Vector2(100, 600), new Vector2(800, 100)] };
+            _waves[1] = new Wave { SpawnPositions = [new Vector2(100, 100), new Vector2(800, 600)] };
+            _waves[2] = new Wave { SpawnPositions = [new Vector2(100, 600), new Vector2(800, 100)] };
             // --- End Wave Definitions ---
 
             CreateGridGraph();
             
             CreatePlayer();
+
+            // Create the UI entity
+            var uiEntity = CreateEntity("ui");
+            uiEntity.AddComponent(new WaveUI(this));
 
             _isIntermission = true;
             _waveCountdownTimer = IntermissionTime;
@@ -61,7 +71,7 @@ namespace SpaceSpin.Scenes
             }
             else
             {
-                if (FindEntitiesWithTag(ComponentRegister.BaseEnemy).Count == 0)
+                if (FindEntitiesWithTag(ComponentRegister.BaseEnemyTag).Count == 0)
                 {
                     _isIntermission = true;
                     _waveCountdownTimer = IntermissionTime;
@@ -69,20 +79,9 @@ namespace SpaceSpin.Scenes
             }
         }
 
-        public override void PostUpdate()
-        {
-            base.PostUpdate();
-
-            if (_isIntermission)
-            {
-                var font = Core.Content.Load<BitmapFont>(ComponentRegister.DefaultFont);
-                var text = $"Next wave in: {_waveCountdownTimer:F1}s";
-                var size = font.MeasureString(text);
-                var pos = new Vector2((Screen.Width - size.X) / 2, 50);
-                
-                Graphics.Instance.Batcher.DrawString(font, text, pos, Color.White);
-            }
-        }
+        public bool IsIntermission() => _isIntermission;
+        public float GetWaveCountdownTimer() => _waveCountdownTimer;
+        public int GetCurrentWave() => CurrentWave;
 
         private void CreateGridGraph()
         {
@@ -140,6 +139,7 @@ namespace SpaceSpin.Scenes
                 foreach (var position in wave.SpawnPositions)
                 {
                     var enemyEntity = CreateEntity(ComponentRegister.BaseEnemy);
+                    enemyEntity.Tag = ComponentRegister.BaseEnemyTag;
                     enemyEntity.Position = position;
                     enemyEntity.AddComponent(new Enemy());
                 }

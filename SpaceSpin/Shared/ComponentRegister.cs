@@ -2,8 +2,12 @@ namespace SpaceSpin.Shared;
 
 public static class ComponentRegister
 {
-    public const string BaseEnemy = "enemy";
+    //player
     public const string Player = "player";
+    
+    //enemy
+    public const string BaseEnemy = "enemy";
+    public const int BaseEnemyTag = 201;
 
     //non-playable components
     public const string Projectile = "projectile";

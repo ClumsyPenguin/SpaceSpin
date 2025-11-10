@@ -5,7 +5,7 @@ using SpaceSpin.Scenes;
 
 namespace SpaceSpin;
 
-public class Game1: Nez.Core
+public class Game1: Core
 {
     public Game1() : base()
     {
