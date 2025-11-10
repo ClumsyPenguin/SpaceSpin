@@ -20,7 +20,7 @@ namespace SpaceSpin.Scenes
         private const float IntermissionTime = 5f;
         private float _waveCountdownTimer;
         private GameState _gameState;
-        private int _currentWave = 0;
+        private int _currentWave;
 
         private readonly Dictionary<int, Wave> _waves = new();
 
@@ -41,8 +41,9 @@ namespace SpaceSpin.Scenes
             ClearColor = Color.CornflowerBlue;
 
             // --- Wave Definitions ---
-            _waves[1] = new Wave { SpawnPositions = [new Vector2(100, 100), new Vector2(800, 600)] };
-            _waves[2] = new Wave { SpawnPositions = [new Vector2(100, 600), new Vector2(800, 100)] };
+            _waves[1] = new Wave { SpawnPositions = [new Vector2(100, 100), new Vector2(800, 600)], BaseEnemyHealthModifier = 1d};
+            _waves[2] = new Wave { SpawnPositions = [new Vector2(100, 600), new Vector2(800, 100)], BaseEnemyHealthModifier = 1.5d};
+            _waves[3] = new Wave { SpawnPositions = [new Vector2(100, 700), new Vector2(900, 100), new Vector2(500, 100)], BaseEnemyHealthModifier = 1.5d };
             // --- End Wave Definitions ---
 
             CreateGridGraph();
@@ -144,12 +145,12 @@ namespace SpaceSpin.Scenes
                     var enemyEntity = CreateEntity(ComponentRegister.BaseEnemy);
                     enemyEntity.Tag = ComponentRegister.BaseEnemyTag;
                     enemyEntity.Position = position;
-                    enemyEntity.AddComponent(new Enemy());
+                    enemyEntity.AddComponent(new Enemy(Core.Content.Load<BitmapFont>(ComponentRegister.DefaultFont), wave.BaseEnemyHealthModifier));
                 }
             }
             else
             {
-                // Handle what happens when there are no more waves (e.g., you win!)
+                // Handle what happens when there are no more waves.
             }
         }
     }

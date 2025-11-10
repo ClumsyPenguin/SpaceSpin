@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Nez;
+using Nez.BitmapFonts;
 using SpaceSpin.Shared;
 using SpaceSpin.Shared.Components;
 using RectangleF = Nez.RectangleF;
@@ -9,19 +10,28 @@ namespace SpaceSpin.Enemies
     public class Enemy : RenderableComponent, IUpdatable
     {
         private Entity _target;
+        private readonly BitmapFont _font;
+        private readonly double _healthModifer;
 
         private const float Speed = 80f;
         private const float Size = 16f;
-
+        
+        private HealthComponent _health;
+        
+        public Enemy(BitmapFont font, double healthModifer = 1d)
+        {
+            _font = font;
+            _healthModifer = healthModifer;
+        }
+        
         public override void OnAddedToEntity()
         {
             base.OnAddedToEntity();
 
             _target = Entity.Scene.FindEntity(ComponentRegister.Player);
-
-            var health = Entity.AddComponent(new HealthComponent(100));
-            health.OnDeath += _ => Entity.Destroy();
-
+            _health = Entity.GetComponent<HealthComponent>() ?? Entity.AddComponent(new HealthComponent((int)(100 * _healthModifer)));
+            _health.OnDeath += _ => Entity.Destroy();
+            
             Entity.AddComponent(new CircleCollider(Size * 0.6f));
         }
 
@@ -88,6 +98,15 @@ namespace SpaceSpin.Enemies
             batcher.DrawLine(p1, p2, Color.Red);
             batcher.DrawLine(p2, p3, Color.Red);
             batcher.DrawLine(p3, p0, Color.Red);
+            
+            if (_font is null || _health is null) 
+                return;
+        
+            var text = _health.CurrentHealth.ToString();
+            var size = _font.MeasureString(text);
+            var textPos = pos - size / 2f;
+            
+            batcher.DrawString(_font, text, textPos, Color.White);
         }
     }
 }
