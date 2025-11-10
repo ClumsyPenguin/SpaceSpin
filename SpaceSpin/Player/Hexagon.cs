@@ -2,8 +2,10 @@ using System;
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.BitmapFonts;
+using SpaceSpin.Shared;
+using SpaceSpin.Shared.Components;
 
-namespace SpaceSpin.Components;
+namespace SpaceSpin.Player;
 
 public class Hexagon : RenderableComponent, IUpdatable
 {
@@ -78,7 +80,7 @@ public class Hexagon : RenderableComponent, IUpdatable
     {
         const float speed = 400f;
 
-        var projEntity = Entity.Scene.CreateEntity("projectile");
+        var projEntity = Entity.Scene.CreateEntity(ComponentRegister.Projectile);
         projEntity.Position = spawnPos;
         
         projEntity.AddComponent(new Projectile(direction * speed, 20f, 2f, 25, Entity));

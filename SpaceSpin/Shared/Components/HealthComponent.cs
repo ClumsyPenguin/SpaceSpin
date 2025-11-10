@@ -1,7 +1,7 @@
 using System;
 using Nez;
 
-namespace SpaceSpin.Components;
+namespace SpaceSpin.Shared.Components;
 
 public class HealthComponent : Component
 {

@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Nez;
 using RectangleF = Nez.RectangleF;
 
-namespace SpaceSpin.Components;
+namespace SpaceSpin.Shared.Components;
 
 
 public class Projectile : RenderableComponent, IUpdatable

@@ -6,9 +6,9 @@ using Scenes;
 
 public class GridVisualizer : RenderableComponent
 {
-    private readonly HexScene _scene;
+    private readonly GameScene _scene;
 
-    public GridVisualizer(HexScene scene)
+    public GridVisualizer(GameScene scene)
     {
         _scene = scene;
         RenderLayer = 1000;

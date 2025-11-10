@@ -18,7 +18,7 @@ public class Game1: Nez.Core
 
         base.Initialize();
         
-        Scene = new HexScene();
+        Scene = new GameScene();
     }
 
     protected override void LoadContent()
