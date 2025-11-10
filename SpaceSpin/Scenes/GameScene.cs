@@ -16,11 +16,11 @@ namespace SpaceSpin.Scenes
     {
         public UnweightedGraph<Point> Graph;
         public float CellSize = 40f;
-        public int CurrentWave = 1;
 
         private const float IntermissionTime = 5f;
         private float _waveCountdownTimer;
-        private bool _isIntermission;
+        private GameState _gameState;
+        private int _currentWave = 0;
 
         private readonly Dictionary<int, Wave> _waves = new();
 
@@ -47,11 +47,10 @@ namespace SpaceSpin.Scenes
             
             CreatePlayer();
 
-            // Create the UI entity
             var uiEntity = CreateEntity("ui");
             uiEntity.AddComponent(new WaveUI(this));
 
-            _isIntermission = true;
+            _gameState = GameState.Intermission;
             _waveCountdownTimer = IntermissionTime;
         }
         
@@ -59,29 +58,32 @@ namespace SpaceSpin.Scenes
         {
             base.Update();
 
-            if (_isIntermission)
+            if (_currentWave is 0)
             {
-                _waveCountdownTimer -= Time.DeltaTime;
-                if (_waveCountdownTimer <= 0)
-                {
-                    _isIntermission = false;
-                    SpawnWave(CurrentWave);
-                    CurrentWave++;
-                }
+                _currentWave++;
+                SpawnWave(_currentWave);
+                _waveCountdownTimer = IntermissionTime;
             }
             else
             {
-                if (FindEntitiesWithTag(ComponentRegister.BaseEnemyTag).Count == 0)
+                _waveCountdownTimer -= Time.DeltaTime;
+
+                if (_waveCountdownTimer <= 0)
                 {
-                    _isIntermission = true;
+                    _currentWave++;
+                    SpawnWave(_currentWave);
                     _waveCountdownTimer = IntermissionTime;
                 }
             }
+
+            _gameState = FindEntitiesWithTag(ComponentRegister.BaseEnemyTag).Count > 0 
+                ? GameState.WaveActive 
+                : GameState.Intermission;
         }
 
-        public bool IsIntermission() => _isIntermission;
+        public GameState GetGameState() => _gameState;
         public float GetWaveCountdownTimer() => _waveCountdownTimer;
-        public int GetCurrentWave() => CurrentWave;
+        public int GetCurrentWave() => _currentWave;
 
         private void CreateGridGraph()
         {
