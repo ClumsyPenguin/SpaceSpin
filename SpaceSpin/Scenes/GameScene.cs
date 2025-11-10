@@ -35,7 +35,9 @@ namespace SpaceSpin.Scenes
         public override void Initialize()
         {
             base.Initialize();
-
+            var bloom = AddPostProcessor(new BloomPostProcessor(0));
+            bloom.Settings = new BloomSettings(0.1f, 1.5f, 2f, 1f, 1, 0);
+            
             ClearColor = Color.CornflowerBlue;
 
             // --- Wave Definitions ---
@@ -44,7 +46,6 @@ namespace SpaceSpin.Scenes
             // --- End Wave Definitions ---
 
             CreateGridGraph();
-            
             CreatePlayer();
 
             var uiEntity = CreateEntity("ui");
@@ -119,7 +120,7 @@ namespace SpaceSpin.Scenes
                 }
             }
         }
-
+        
         private void CreatePlayer()
         {
             var center = new Vector2(Screen.Width / 2f, Screen.Height / 2f);

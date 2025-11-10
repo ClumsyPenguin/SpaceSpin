@@ -14,8 +14,6 @@ public class Game1: Core
     
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
-
         base.Initialize();
         
         Scene = new GameScene();
@@ -23,8 +21,6 @@ public class Game1: Core
 
     protected override void LoadContent()
     {
-        // TODO: use this.Content to load your game content here
-
         base.LoadContent();
     }
 
@@ -32,16 +28,12 @@ public class Game1: Core
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-
-        // TODO: Add your update logic here
-
+        
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Black);
-
         base.Draw(gameTime);
     }
 }
